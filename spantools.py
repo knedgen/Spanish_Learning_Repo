@@ -1,29 +1,14 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[ ]:
-
-
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[37]:
-
-
 import bs4
 import requests
 import time
 from random import randint
 from random import choice
 from random import sample
-from openpyxl import Workbook
-from openpyxl import load_workbook
+import sqlite3 as sq
+import pandas as pd
 letters = ["a","b","c","d"]
 result = requests.get('https://www.spanishdict.com/wordoftheday/1')
 soup = bs4.BeautifulSoup(result.text,'lxml')
-
-
-# In[41]:
 
 
 class Spanish:
@@ -144,69 +129,7 @@ class Spanish:
                 print(f"{count}){spword.text}")
                 print(f"{enword.text}\n")
                 
-    def span_comp(self):
-
-        print("Welcome\n")
-        print("Starting up...\n")
-        time.sleep(1)
-
-
-        while True:
-                time.sleep(1)
-                print("\nFunctions:")
-                print("1. Today's Word")
-                print("2. Yesterday's Word")
-                print("3. Words the last week")
-                print("4. Words the last month")
-                print("5. Words the last year")
-                print("6. Exit")
-                print("\n")
-                time.sleep(1)
-                choice = int(input("Which function would you like to use? 1/2/3/4/5/6: "))
-                print("\n")
-
-
-
-                if choice == 1:
-                    print("\nLoading...\n")
-                    time.sleep(1)
-                    Spanish.today(" ")
-                    time.sleep(1)
-
-                elif choice == 2:
-                    print("\nLoading...\n")
-                    time.sleep(1)
-                    Spanish.yesterday(" ")
-                    time.sleep(1)
-
-                elif choice == 3:
-                    print("\nLoading...\n")
-                    time.sleep(1)
-                    Spanish.week(" ")
-                    time.sleep(1)
-
-                elif choice == 4:
-                    print("\nLoading...\n")
-                    time.sleep(1)
-                    Spanish.month(" ")
-                    time.sleep(1)
-
-                elif choice == 5:
-                    print("\nLoading...\n")
-                    time.sleep(1)
-                    Spanish.year(" ")
-                    time.sleep(1)
-
-                elif choice == 6:
-                    print("Shutting down...\n")
-                    time.sleep(1)
-                    print('Gracias!')
-                    time.sleep(1)
-                    break
-
-
-                else:
-                    print("Not a valid input")               
+              
 
     def get_words(self):
 
@@ -296,35 +219,149 @@ class Spanish:
 
             elif again == 'n' or again == 'N' or again == 'no' or again == 'No':
                 
-                #saves high scores to an excel file
-                filename = 'hiscores.xlsx'
-                new_row = [name,points,ques]
+                conn = sq.connect('hiscores.db')
+            
+                perc = round(((int(points)/int(ques))*100),2)
 
-                #opens the workbook
-                try:
-                    wb = load_workbook('hiscores.xlsx')
-                    #gets the first sheet
-                    ws = wb.worksheets[0]
-                #creates the file if it doesn't exist
-                except:
-                    headers_row = ['Name','Points','Questions']
-                    wb = Workbook()
-                    ws = wb.active
-                    ws.append(headers_row)
+                c = conn.cursor()
 
-                #add the info to the rows
-                ws.append(new_row)
-                wb.save("hiscores.xlsx")
-                
+                c.execute("""CREATE TABLE if not exists hiscores (Name text, Points int, Questions int, Percent real)""")
+
+                new_row = [name,points,ques,perc]
+
+                c.execute("INSERT INTO hiscores VALUES (?, ?, ?, ?)", (new_row))
+
+                conn.commit()
+
+                conn.close()
+
                 print(f"{name} scored {points} point(s) off of {ques} question(s)\n")
+                print(f"Percent Correct:{perc}%\n")
                 print("Saving score...\n")
                 time.sleep(1)
                 print("Thanks for playing")
                 play = False
 
+    def top_points(self):
+        
+        conn = sq.connect('hiscores.db')
 
-# In[ ]:
+        df = pd.read_sql_query("SELECT * FROM hiscores ORDER BY Points DESC, Percent DESC", conn)
+
+        print(df.head())
+        
+        conn.close()
+        
+    def top_percent(self):
+        
+        conn = sq.connect('hiscores.db')
+
+        df = pd.read_sql_query("SELECT * FROM hiscores ORDER BY Percent DESC, Questions DESC", conn)
+
+        print(df.head())
+        
+        conn.close()
+        
+        
+    def top_questions(self):
+        
+        conn = sq.connect('hiscores.db')
+
+        df = pd.read_sql_query("SELECT * FROM hiscores ORDER BY Questions DESC, Percent DESC", conn)
+
+        print(df.head())
+        
+        conn.close()
+        
+    def span_comp(self):
+
+        print("Welcome\n")
+        print("Starting up...\n")
+        time.sleep(1)
+
+
+        while True:
+                time.sleep(1)
+                print("\nFunctions:")
+                print("1. Today's Word")
+                print("2. Yesterday's Word")
+                print("3. Words the last week")
+                print("4. Words the last month")
+                print("5. Words the last year")
+                print("6. Quiz")
+                print("7. Hiscores - Top Points")
+                print("8. Hiscores - Highest Correction %")
+                print("9. Hiscores - Most Questions")
+                print("10. Exit")
+                print("\n")
+                time.sleep(1)
+                choice = int(input("Which function would you like to use? 1/2/3/4/5/6/7/8/9/10: "))
+                print("\n")
 
 
 
+                if choice == 1:
+                    print("\nLoading...\n")
+                    time.sleep(1)
+                    Spanish.today(" ")
+                    time.sleep(1)
 
+                elif choice == 2:
+                    print("\nLoading...\n")
+                    time.sleep(1)
+                    Spanish.yesterday(" ")
+                    time.sleep(1)
+
+                elif choice == 3:
+                    print("\nLoading...\n")
+                    time.sleep(1)
+                    Spanish.week(" ")
+                    time.sleep(1)
+
+                elif choice == 4:
+                    print("\nLoading...\n")
+                    time.sleep(1)
+                    Spanish.month(" ")
+                    time.sleep(1)
+
+                elif choice == 5:
+                    print("\nLoading...\n")
+                    time.sleep(1)
+                    Spanish.year(" ")
+                    time.sleep(1)
+                    
+                elif choice == 6:
+                    print("\nLoading...\n")
+                    time.sleep(1)
+                    Spanish.Quiz(" ")
+                    time.sleep(1)
+                    
+                elif choice == 7:
+                    print("\nLoading...\n")
+                    time.sleep(1)
+                    Spanish.top_points(" ")
+                    time.sleep(1)
+
+                elif choice == 8:
+                    print("\nLoading...\n")
+                    time.sleep(1)
+                    Spanish.top_percent(" ")
+                    time.sleep(1)
+                    
+                elif choice == 9:
+                    print("\nLoading...\n")
+                    time.sleep(1)
+                    Spanish.top_questions(" ")
+                    time.sleep(1)
+                    
+                
+                elif choice == 10:
+                    print("Shutting down...\n")
+                    time.sleep(1)
+                    print('Gracias!')
+                    time.sleep(1)
+                    break
+
+
+                else:
+                    print("Not a valid input")    

@@ -28,11 +28,11 @@ class Spanish:
         
         today = soup.select('h3')[0]
         totext = today.text
-        today1 = soup.select('div.translation--3iXmZ8Jd')[0]
+        today1 = soup.select('div._3iXmZ8Jd')[0]
         totext1 = today1.text
-        spex = soup.select("div.exampleSource--2I4LpW3B")[0]
+        spex = soup.select("div._2I4LpW3B")[0]
         spextext = spex.text
-        enex = soup.select('div.exampleTranslation--2w_JRz6o')[0]
+        enex = soup.select('div._2w_JRz6o')[0]
         enextext = enex.text
 
         print("Today's word is:\n")
@@ -46,11 +46,11 @@ class Spanish:
     
         today = soup.select('h3')[1]
         totext = today.text
-        today1 = soup.select('div.translation--3iXmZ8Jd')[1]
+        today1 = soup.select('div._3iXmZ8Jd')[1]
         totext1 = today1.text
-        spex = soup.select("div.exampleSource--2I4LpW3B")[2]
+        spex = soup.select("div._2I4LpW3B")[2]
         spextext = spex.text
-        enex = soup.select('div.exampleTranslation--2w_JRz6o')[2]
+        enex = soup.select('div._2w_JRz6o')[2]
         enextext = enex.text
 
         print("Yesterday's word was:\n")
@@ -69,7 +69,7 @@ class Spanish:
             result = requests.get('https://www.spanishdict.com/wordoftheday/1')
             soup = bs4.BeautifulSoup(result.text,'lxml')
             spword = soup.select('h3')[i]
-            enword = soup.select('div.translation--3iXmZ8Jd')[i]
+            enword = soup.select('div._3iXmZ8Jd')[i]
             count += 1
 
 
@@ -92,7 +92,7 @@ class Spanish:
             for i in range(0,10):
 
                 spword = soup.select('h3')[i]
-                enword = soup.select('div.translation--3iXmZ8Jd')[i]
+                enword = soup.select('div._3iXmZ8Jd')[i]
                 count += 1
                 if count == 32:
                     break
@@ -119,7 +119,7 @@ class Spanish:
             for i in range(0,10):
 
                 spword = soup.select('h3')[i]
-                enword = soup.select('div.translation--3iXmZ8Jd')[i]
+                enword = soup.select('div._3iXmZ8Jd')[i]
                 count += 1
 
                 if count == 366:
@@ -151,7 +151,7 @@ class Spanish:
                 spword = soup.select('h3')[i]
                 spnwords.append(spword.text)
 
-                enword = soup.select('div.translation--3iXmZ8Jd')[i]
+                enword = soup.select('div._3iXmZ8Jd')[i]
                 engwords.append(enword.text)
 
 

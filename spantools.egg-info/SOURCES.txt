@@ -1,0 +1,6 @@
+README.md
+setup.py
+spantools.egg-info/PKG-INFO
+spantools.egg-info/SOURCES.txt
+spantools.egg-info/dependency_links.txt
+spantools.egg-info/top_level.txt

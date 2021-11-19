@@ -1,0 +1,6 @@
+- Consolidate repeated code into models, views, controllers
+- Take advantage of inheritence in classes to maintain simplicity in code
+- Allow core quiz functionality to be called from multiple interfaces (web, notebook)
+- Maximize efficiency by scraping words on a schedule and pulling from your database 
+- Take advantage of an ORM to define schema and provide data access in one
+- Complete the setup.py fields as if the package would be published 
